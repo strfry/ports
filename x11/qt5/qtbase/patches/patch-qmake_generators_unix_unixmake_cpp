@@ -8,12 +8,13 @@ $OpenBSD: patch-qmake_generators_unix_unixmake_cpp,v 1.2 2017/07/17 08:34:37 zhu
 Index: qmake/generators/unix/unixmake.cpp
 --- qmake/generators/unix/unixmake.cpp.orig
 +++ qmake/generators/unix/unixmake.cpp
-@@ -49,7 +49,27 @@
+@@ -48,7 +48,27 @@ ProStringList UnixMakefileGenerator::libdirToFlags(con
+     return results;
  }
-  
+ 
 +// Helper for putting -L for in-build-tree directories first, all other arguments later;
 +// avoids picking up system libraries instead of built ones.
-+void
+ void
 +UnixMakefileGenerator::separateInternalLibdirs(ProStringList &libs, ProStringList &libdirsInt, QString prefix) {
 +    QFileInfo fi(project->cacheFile().isEmpty() ? project->buildRoot() : project->cacheFile());
 +    QFileInfo fi2(fi.dir().path());
@@ -31,42 +32,43 @@ Index: qmake/generators/unix/unixmake.cpp
 +    }
 +}
 +
- void
++void
  UnixMakefileGenerator::init()
  {
      ProStringList &configs = project->values("CONFIG");
-@@ -109,6 +130,10 @@ UnixMakefileGenerator::init()
+@@ -109,6 +129,10 @@ UnixMakefileGenerator::init()
      if(!project->isEmpty("QMAKE_INCDIR"))
          project->values("INCLUDEPATH") += project->values("QMAKE_INCDIR");
      // The order of the next two lines is relevant due to side effect on QMAKE_LFLAGS.
-     ProStringList ldadd;
 +    QString destdir = project->first("DESTDIR").toQString();
 +    if (destdir.isEmpty())
 +        destdir = qmake_getpwd();
 +    project->values("QMAKE_LIBDIR_FLAGS") += "-L" + destdir;   // will be escaped later
-     if(!project->isEmpty("QMAKE_LIBDIR")) {
-         const ProStringList &libdirs = project->values("QMAKE_LIBDIR");
-         for(int i = 0; i < libdirs.size(); ++i) {
-@@ -118,8 +142,17 @@ UnixMakefileGenerator::init()
+     ProStringList ldadd = project->values("QMAKE_LIBDIR_FLAGS") + libdirToFlags("QMAKE_LIBDIR");
+     ProStringList ldaddpost = libdirToFlags("QMAKE_LIBDIR_POST");
+     if (project->isActiveConfig("mac")) {
+@@ -119,10 +143,19 @@ UnixMakefileGenerator::init()
          }
          ldadd += project->values("QMAKE_FRAMEWORKPATH_FLAGS");
      }
 +
 +    // Put -L for in-build-tree directories first, all other arguments later;
 +    // avoids picking up system libraries instead of built ones.
-     ProStringList &qmklibs = project->values("QMAKE_LIBS");
+     ProStringList &qmklibs = project->values("LIBS");
 -    qmklibs = ldadd + qmklibs;
 +    qmklibs += ldadd;
 +    ProStringList libdirsInternal;
+     ProStringList &qmklibspost = project->values("QMAKE_LIBS");
+     qmklibspost = ldaddpost + qmklibspost;
 +    separateInternalLibdirs(qmklibs, libdirsInternal, QStringLiteral("-L"));
 +    separateInternalLibdirs(project->values("QMAKE_LIBS_PRIVATE"), libdirsInternal,
 +QStringLiteral("-L"));
 +    qmklibs = libdirsInternal + qmklibs;
-+
++    qmklibspost = libdirsInternal + qmklibspost;
      if (!project->isEmpty("QMAKE_RPATHDIR") && !project->isEmpty("QMAKE_LFLAGS_RPATH")) {
          const ProStringList &rpathdirs = project->values("QMAKE_RPATHDIR");
          for (int i = 0; i < rpathdirs.size(); ++i) {
-@@ -145,14 +178,17 @@ UnixMakefileGenerator::init()
+@@ -148,14 +181,17 @@ UnixMakefileGenerator::init()
          }
      }
      if (!project->isEmpty("QMAKE_RPATHLINKDIR")) {
@@ -86,8 +88,8 @@ Index: qmake/generators/unix/unixmake.cpp
          include_deps = true; //do not generate deps
  
      MakefileGenerator::init();
-@@ -423,6 +459,9 @@ UnixMakefileGenerator::findLibraries(bool linkPrl, boo
-     static const char * const lflags[] = { "QMAKE_LIBS", "QMAKE_LIBS_PRIVATE", 0 };
+@@ -405,6 +441,9 @@ UnixMakefileGenerator::findLibraries(bool linkPrl, boo
+                                            "QMAKE_LIBS", "QMAKE_LIBS_PRIVATE", nullptr };
      for (int i = 0; lflags[i]; i++) {
          ProStringList &l = project->values(lflags[i]);
 +        ProStringList libdirsInt;

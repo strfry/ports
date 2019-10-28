@@ -2,7 +2,7 @@ $OpenBSD: patch-src_corelib_global_global_pri,v 1.3 2018/01/25 15:02:25 rsadowsk
 Index: src/corelib/global/global.pri
 --- src/corelib/global/global.pri.orig
 +++ src/corelib/global/global.pri
-@@ -64,6 +64,10 @@ qtConfig(slog2): \
+@@ -107,6 +107,10 @@ qtConfig(slog2): \
  qtConfig(journald): \
      QMAKE_USE_PRIVATE += journald
  

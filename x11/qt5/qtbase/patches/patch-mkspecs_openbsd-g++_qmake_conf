@@ -22,7 +22,7 @@ Index: mkspecs/openbsd-g++/qmake.conf
 +isEmpty(LOCALBASE) {
 +  LOCALBASE             = /usr/local
 +}
-+QMAKE_INCDIR_PREPEND    = ${OPENBSD_INCDIR_PREPEND}
++QMAKE_INCDIR_PREPEND    = include
  QMAKE_INCDIR_POST       = /usr/local/include
  QMAKE_LIBDIR_POST       = /usr/local/lib
  

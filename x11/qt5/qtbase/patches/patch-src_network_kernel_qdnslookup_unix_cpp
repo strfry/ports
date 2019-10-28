@@ -3,7 +3,7 @@ Unbreak compilation.
 Index: src/network/kernel/qdnslookup_unix.cpp
 --- src/network/kernel/qdnslookup_unix.cpp.orig
 +++ src/network/kernel/qdnslookup_unix.cpp
-@@ -65,6 +65,8 @@ QT_BEGIN_NAMESPACE
+@@ -69,6 +69,8 @@ QT_BEGIN_NAMESPACE
  
  #if QT_CONFIG(library)
  

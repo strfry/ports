@@ -4,8 +4,8 @@ Allow libiodbc to be picked up.
 Index: src/plugins/sqldrivers/configure.json
 --- src/plugins/sqldrivers/configure.json.orig
 +++ src/plugins/sqldrivers/configure.json
-@@ -130,8 +130,8 @@
-             },
+@@ -126,8 +126,8 @@
+             "headers": [ "sql.h", "sqlext.h" ],
              "sources": [
                  { "libs": "-lodbc32", "condition": "config.win32" },
 -                { "libs": "-liodbc", "condition": "config.darwin" },

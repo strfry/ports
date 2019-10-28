@@ -3,8 +3,8 @@ Unbreak build of documentation.
 Index: src/platformheaders/platformheaders.pro
 --- src/platformheaders/platformheaders.pro.orig
 +++ src/platformheaders/platformheaders.pro
-@@ -12,6 +12,7 @@ include(cocoafunctions/cocoafunctions.pri)
- include(waylandfunctions/waylandfunctions.pri)
+@@ -13,6 +13,7 @@ include(waylandfunctions/waylandfunctions.pri)
+ include(linuxfbfunctions/linuxfbfunctions.pri)
  
  QMAKE_DOCS = $$PWD/doc/qtplatformheaders.qdocconf
 +tagfile = doc/qtplatformheaders.tags

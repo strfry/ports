@@ -4,7 +4,7 @@ Get rid of strcpy.
 Index: src/corelib/kernel/qfunctions_fake_env_p.h
 --- src/corelib/kernel/qfunctions_fake_env_p.h.orig
 +++ src/corelib/kernel/qfunctions_fake_env_p.h
-@@ -94,13 +94,11 @@ errno_t qt_fake_getenv_s(size_t *sizeNeeded, char *buf
+@@ -96,13 +96,11 @@ errno_t qt_fake_getenv_s(size_t *sizeNeeded, char *buf
          return ENOENT;
      }
  

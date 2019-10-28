@@ -3,7 +3,7 @@ Get rid of qstrcpy.
 Index: src/testlib/qtestcase.cpp
 --- src/testlib/qtestcase.cpp.orig
 +++ src/testlib/qtestcase.cpp
-@@ -2436,37 +2436,37 @@ template <> Q_TESTLIB_EXPORT char *QTest::toString<cha
+@@ -2664,37 +2664,37 @@ template <> Q_TESTLIB_EXPORT char *QTest::toString<cha
      char *msg = new char[16];
      switch (c) {
      case 0x00:
@@ -52,7 +52,7 @@ Index: src/testlib/qtestcase.cpp
          break;
      default:
          if (c < 0x20 || c >= 0x7F)
-@@ -2483,8 +2483,7 @@ char *QTest::toString(const char *str)
+@@ -2711,8 +2711,7 @@ char *QTest::toString(const char *str)
  {
      if (!str)
          return 0;

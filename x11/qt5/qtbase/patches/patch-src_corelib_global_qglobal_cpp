@@ -1,0 +1,17 @@
+$OpenBSD$
+
+Index: src/corelib/global/qglobal.cpp
+--- src/corelib/global/qglobal.cpp.orig
++++ src/corelib/global/qglobal.cpp
+@@ -2968,6 +2968,11 @@ QByteArray QSysInfo::machineUniqueId()
+     if (sysctl(name, sizeof name / sizeof name[0], &uuid, &uuidlen, nullptr, 0) == 0
+             && uuidlen == sizeof(uuid))
+         return QByteArray(uuid, uuidlen - 1);
++#  elif defined(HW_UUID)
++    int name[] = { CTL_HW, HW_UUID };
++    if (sysctl(name, sizeof name / sizeof name[0], &uuid, &uuidlen, nullptr, 0) == 0
++            && uuidlen == sizeof(uuid))
++        return QByteArray(uuid, uuidlen - 1);
+ 
+ #  else
+     // Darwin: no fixed value, we need to search by name
